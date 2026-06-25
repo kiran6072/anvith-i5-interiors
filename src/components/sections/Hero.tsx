@@ -19,7 +19,7 @@ export function Hero() {
   }, []);
 
   return (
-    <section ref={ref} className="relative isolate min-h-screen overflow-hidden">
+    <section ref={ref} className="relative min-h-[75vh]">
       {/* Background */}
       <div
         className="absolute inset-0 -z-20"

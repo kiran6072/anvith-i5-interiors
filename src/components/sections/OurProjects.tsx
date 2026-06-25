@@ -64,9 +64,7 @@ export function OurProjects() {
               <span className="text-gradient-gold">luxury and calm.</span>
             </h2>
           </div>
-          <Link to="/projects" className="text-sm tracking-wide text-gold">
-            View full portfolio →
-          </Link>
+        
         </div>
 
         <p className="mt-6 max-w-3xl text-muted-foreground">

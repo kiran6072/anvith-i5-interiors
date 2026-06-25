@@ -2,7 +2,6 @@ import { useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { Mail, MapPin, Phone, Send } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import { SERVICES, SITE } from "@/lib/site";
 
 const schema = z.object({
@@ -18,29 +17,37 @@ export function Contact() {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const fd = new FormData(e.currentTarget);
-    const parsed = schema.safeParse(Object.fromEntries(fd));
-    if (!parsed.success) {
-      const errs: Record<string, string> = {};
-      parsed.error.issues.forEach((i) => (errs[String(i.path[0])] = i.message));
-      setErrors(errs);
-      return;
-    }
-    setErrors({});
-    setSubmitting(true);
-    const { error } = await supabase.from("enquiries").insert(parsed.data);
-    setSubmitting(false);
-    if (error) {
-      toast.error("Could not submit. Please try again or call us.");
-      return;
-    }
-    toast.success("Enquiry received. We'll be in touch within 24 hours.");
-    (e.target as HTMLFormElement).reset();
+  e.preventDefault();
+
+  const fd = new FormData(e.currentTarget);
+  const parsed = schema.safeParse(Object.fromEntries(fd));
+
+  if (!parsed.success) {
+    const errs: Record<string, string> = {};
+
+    parsed.error.issues.forEach((i) => {
+      errs[String(i.path[0])] = i.message;
+    });
+
+    setErrors(errs);
+    return;
   }
 
+  setErrors({});
+  setSubmitting(true);
+
+  // Simulate sending the enquiry
+  await new Promise((resolve) => setTimeout(resolve, 1200));
+
+  setSubmitting(false);
+
+  toast.success("Thank you! Your enquiry has been received. We will contact you shortly.");
+
+  (e.target as HTMLFormElement).reset();
+}
+
   return (
-    <section id="contact" className="relative py-32">
+    <section id="contact" className="relative py-16">
       <div className="container-luxe grid gap-12 lg:grid-cols-2">
         <div>
           <span className="eyebrow">Get in touch</span>

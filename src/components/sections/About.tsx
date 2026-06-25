@@ -5,7 +5,7 @@ import { SITE } from "@/lib/site";
 
 export function About() {
   return (
-    <section id="about" className="relative py-32">
+    <section id="about" className="relative py-16">
       <div className="container-luxe grid items-center gap-16 lg:grid-cols-2">
         <div className="relative">
           <div className="absolute -inset-6 -z-10 rounded-sm bg-gradient-gold opacity-15 blur-3xl" />

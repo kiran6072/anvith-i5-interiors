@@ -23,7 +23,6 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { WhatsAppFab } from "@/components/site/WhatsAppFab";
-import { supabase } from "@/integrations/supabase/client";
 
 function NotFoundComponent() {
   return (
@@ -108,28 +107,30 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  const router = useRouter();
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const isAdmin = pathname.startsWith("/admin") || pathname === "/auth";
 
-  useEffect(() => {
-    const { data: sub } = supabase.auth.onAuthStateChange((event) => {
-      if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
-      router.invalidate();
-      if (event !== "SIGNED_OUT") queryClient.invalidateQueries();
-    });
-    return () => sub.subscription.unsubscribe();
-  }, [router, queryClient]);
+  const pathname = useRouterState({
+    select: (s) => s.location.pathname,
+  });
+
+  const isAdmin =
+    pathname.startsWith("/admin") || pathname === "/auth";
 
   return (
     <QueryClientProvider client={queryClient}>
       {!isAdmin && <SiteHeader />}
+
       <main className="min-h-screen">
         <Outlet />
       </main>
+
       {!isAdmin && <SiteFooter />}
       {!isAdmin && <WhatsAppFab />}
-      <Toaster theme="dark" position="bottom-center" richColors />
+
+      <Toaster
+        theme="dark"
+        position="bottom-center"
+        richColors
+      />
     </QueryClientProvider>
   );
 }
